@@ -34,8 +34,7 @@ import config from 'base-ts-config'
 
 export default config({
   // optional project-specific overrides
-  ignores: ['some/extra/path/'],
-  tsconfigPath: './tsconfig.custom.json'
+  ignores: ['some/extra/path/']
 })
 ```
 

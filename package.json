@@ -8,6 +8,7 @@
     "typescript"
   ],
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "lint:fix": "eslint --cache --fix --max-warnings 0",
     "type:check": "tsc --skipLibCheck",
