@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", /* ESNext value refers to the highest version your version of TypeScript supports */
+    "moduleDetection": "force", /* Ensures that every non-declaration file is treated as a module. */
+    "module": "ESNext", /* Sets the module system for the program */
+    "moduleResolution": "bundler", /* Never requires file extensions on relative paths in imports unlike to nodenext */
+    "strict": true, /* Wide range of type checking behavior that results in stronger guarantees of program correctness */
+    "noEmit": true, /* Do not emit compiler output files like JavaScript source code, source-maps or declarations. */
+    "skipLibCheck": false /* Skip type checking all .d.ts files. (useful for development , disabled in pre-commit) */
+  }
+}

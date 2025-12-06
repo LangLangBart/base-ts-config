@@ -1,0 +1,27 @@
+{
+  // Auto fix
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never",
+    "source.sort.json": "never"
+  },
+  // Disable the default formatter, use eslint instead
+  "prettier.enable": false,
+  "editor.formatOnSave": false,
+  "[shellscript]": {
+    "editor.formatOnSave": true
+  },
+  // Enable eslint for all supported languages
+  "eslint.validate": [
+    "css",
+    "html",
+    "javascript",
+    "json",
+    "jsonc",
+    "markdown",
+    "toml",
+    "typescript",
+    "yaml",
+    "xml"
+  ]
+}
