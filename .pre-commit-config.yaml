@@ -1,0 +1,86 @@
+---
+# https://pre-commit.com/
+default_stages: [pre-commit]
+fail_fast: true
+
+repos:
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: bun run lint:fix
+        language: system
+        pass_filenames: false
+      - id: typescript
+        name: type check
+        entry: bun run type:check
+        language: system
+        types_or: [ts, tsx]
+        pass_filenames: false
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-json
+        # Some .json files contain useful comments, they shall not be removed
+        exclude: |
+          (?x)^(
+            .*tsconfig.*\.json|
+            \.vscode/settings.json
+          )$
+      - id: check-symlinks
+      - id: check-yaml
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: trailing-whitespace
+  - repo: https://github.com/adhtruong/mirrors-typos
+    rev: v1.40.0
+    hooks:
+      - id: typos
+        args: [--format, brief, --write-changes, --force-exclude]
+  - repo: https://github.com/tcort/markdown-link-check
+    rev: v3.14.2
+    hooks:
+      - id: markdown-link-check
+        name: markdown link check
+        args: [--quiet]
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.46.0
+    hooks:
+      - id: markdownlint
+        # Disable line-length/no-inline-html
+        args: [--disable=MD013, --disable=MD033, --fix]
+  - repo: https://github.com/lyz-code/yamlfix
+    rev: 1.19.0
+    hooks:
+      - id: yamlfix
+        entry: env YAMLFIX_WHITELINES=1 YAMLFIX_SECTION_WHITELINES=1 yamlfix
+  - repo: https://github.com/adhtruong/mirrors-typos
+    rev: v1.40.0
+    hooks:
+      - id: typos
+        name: detect typos in commit message
+        args: [--format, brief]
+        stages: [commit-msg]
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+        name: validate commit message format
+        args: [--ignore, body-is-missing, --msg-filename]
+        stages: [commit-msg]
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.10.0
+    hooks:
+      - id: commitizen
+        name: check commit message structure
+        stages: [commit-msg]

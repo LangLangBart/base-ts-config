@@ -1,0 +1,16 @@
+# Cache
+.eslintcache
+
+# Dependency directory
+node_modules/
+
+# no dependencies that are bundled ignore lockfiles
+bun.lock*
+deno.lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Exclude .vscode files and pre-commit config from ignore
+!.vscode/
+!.pre-commit-config.yaml
