@@ -15,8 +15,9 @@
     "postinstall": "if type pre-commit >/dev/null; then pre-commit install --hook-type commit-msg --hook-type pre-commit; fi"
   },
   "dependencies": {
-    "@antfu/eslint-config": "^6.4.2",
+    "@antfu/eslint-config": "^6.6.1",
     "@prettier/plugin-xml": "^3.4.2",
-    "eslint-plugin-format": "^1.1.0"
+    "eslint-plugin-format": "^1.1.0",
+    "eslint-plugin-sonarjs": "^3.0.5"
   }
 }
