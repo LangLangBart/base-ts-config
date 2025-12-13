@@ -7,6 +7,7 @@ import parser from '@typescript-eslint/parser'
 import jsdoc from 'eslint-plugin-jsdoc'
 import { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc/getJsdocProcessorPlugin.js'
 import perfectionist from 'eslint-plugin-perfectionist'
+import sonarjs from 'eslint-plugin-sonarjs'
 import unicorn from 'eslint-plugin-unicorn'
 import merge from 'lodash.merge'
 
@@ -19,6 +20,7 @@ export default function config(options = {}, ...userConfigs) {
   const defaults = {
     formatters: true,
     isInEditor: false,
+    plugins: { sonarjs },
     rules: {
       ...jsdoc.configs['flat/contents-typescript'].rules,
       ...jsdoc.configs['flat/logical-typescript'].rules,
@@ -39,6 +41,34 @@ export default function config(options = {}, ...userConfigs) {
       'node/prefer-global/process': 0,
       'prefer-object-has-own': 1,
       'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }],
+      'sonarjs/class-name': 'warn',
+      // Complexity rules off for  now but desireful to have
+      // 'sonarjs/cognitive-complexity': 0,
+      // 'sonarjs/cyclomatic-complexity': 0,
+      // 'sonarjs/expression-complexity': 0,
+      'sonarjs/no-all-duplicated-branches': 'warn',
+      'sonarjs/no-array-delete': 'warn',
+      'sonarjs/no-associative-arrays': 'warn',
+      'sonarjs/no-collection-size-mischeck': 'warn',
+      'sonarjs/no-duplicated-branches': 'warn',
+      'sonarjs/no-element-overwrite': 'warn',
+      'sonarjs/no-empty-collection': 'warn',
+      'sonarjs/no-identical-conditions': 'warn',
+      'sonarjs/no-identical-expressions': 'warn',
+      'sonarjs/no-identical-functions': 'warn',
+      'sonarjs/no-in-misuse': 'warn',
+      'sonarjs/no-invariant-returns': 'warn',
+      'sonarjs/no-inverted-boolean-check': 'warn',
+      'sonarjs/no-redundant-assignments': 'warn',
+      'sonarjs/no-small-switch': 'warn',
+      'sonarjs/no-try-promise': 'warn',
+      'sonarjs/no-use-of-empty-return-value': 'warn',
+      'sonarjs/no-useless-increment': 'warn',
+      'sonarjs/non-existent-operator': 'warn',
+      'sonarjs/prefer-promise-shorthand': 'warn',
+      'sonarjs/prefer-while': 'warn',
+      'sonarjs/strings-comparison': 'warn',
+      'sonarjs/super-invocation': 'warn',
       'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
       'unicorn/filename-case': ['warn', { cases: { kebabCase: true, pascalCase: true, snakeCase: true } }],
       'unicorn/no-array-reduce': 0,
