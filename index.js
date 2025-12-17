@@ -22,12 +22,6 @@ export default function config(options = {}, ...userConfigs) {
     isInEditor: false,
     plugins: { sonarjs },
     rules: {
-      ...jsdoc.configs['flat/contents-typescript'].rules,
-      ...jsdoc.configs['flat/logical-typescript'].rules,
-      ...jsdoc.configs['flat/requirements-typescript'].rules,
-      ...jsdoc.configs['flat/stylistic-typescript'].rules,
-      ...perfectionist.configs['recommended-natural'].rules,
-      ...unicorn.configs.recommended.rules,
       // Disable/relax some rules to make it easier to write code
       'antfu/no-top-level-await': 0,
       'curly': 1,
@@ -101,21 +95,45 @@ export default function config(options = {}, ...userConfigs) {
     }
   }
 
-  return antfu(merge(defaults, options), {
-    files: ['**/*.js'],
-    rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
-  }, {
-    files: ['src/**/*.{js,ts}'],
-    rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
-  }, {
-    files: ['**/*.{js,ts}'],
-    ignores: ['**/*.md/*.{js,ts}', '**/*.{d,as,test}.{js,ts}'],
-    rules: { 'jsdoc/require-file-overview': 1 }
-  }, {
-  // Lint @example tags
-    files: ['**/*.ts'],
-    // The regex is needed to extract the code to be linted from the @example tag.
-    plugins: { name: getJsdocProcessorPlugin({ exampleCodeRegex: /```[jt]s\n([\s\S]*?)```/g, matchingFileName: 'name.md/*.ts', parser }) },
-    processor: 'name/examples'
-  }, ...userConfigs)
+  const merged = merge(defaults, options)
+
+  return antfu(
+    merged, // First to configure the environment (TypeScript, Stylistic, etc.)
+    { rules: jsdoc.configs['flat/contents-typescript'].rules },
+    { rules: jsdoc.configs['flat/logical-typescript'].rules },
+    { rules: jsdoc.configs['flat/requirements-typescript'].rules },
+    { rules: jsdoc.configs['flat/stylistic-typescript'].rules },
+    { rules: perfectionist.configs['recommended-natural'].rules },
+    { rules: unicorn.configs.recommended.rules },
+    { rules: merged.rules }, // Repeated to override the presets above
+    {
+      files: ['**/*.js'],
+      rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
+    },
+    {
+      files: ['**/*.js'],
+      rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
+    },
+    {
+      files: ['**/*.js'],
+      rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
+    },
+    {
+      files: ['src/**/*.{js,ts}'],
+      rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
+    },
+    {
+      files: ['**/*.{js,ts}'],
+      ignores: ['**/*.md/*.{js,ts}', '**/*.{d,as,test}.{js,ts}'],
+      rules: { 'jsdoc/require-file-overview': 1 }
+    },
+    {
+      // Lint @example tags
+      files: ['**/*.ts'],
+      // The regex is needed to extract the code to be linted from the @example tag.
+      plugins: { name: getJsdocProcessorPlugin({ exampleCodeRegex: /```[jt]s\n([\s\S]*?)```/g, matchingFileName: 'name.md/*.ts', parser }) },
+      processor: 'name/examples'
+    },
+    ...userConfigs
+  )
 }
