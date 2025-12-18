@@ -33,6 +33,27 @@ export default function config(options = {}, ...userConfigs) {
       'no-console': 0,
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
+      'perfectionist/sort-modules': ['warn', {
+        groups: [
+          'declare-enum',
+          'export-enum',
+          'enum',
+          'declare-interface',
+          'export-interface',
+          'interface',
+          'declare-type',
+          'export-type',
+          'type',
+          'declare-class',
+          'class',
+          'export-class',
+          'declare-function',
+          'export-function',
+          'function'
+        ],
+        order: 'asc',
+        type: 'natural'
+      }],
       'prefer-object-has-own': 1,
       'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }],
       'sonarjs/class-name': 'warn',
