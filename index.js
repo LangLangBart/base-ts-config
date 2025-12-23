@@ -26,10 +26,12 @@ export default function config(options = {}, ...userConfigs) {
       'antfu/no-top-level-await': 0,
       'curly': 1,
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
+      'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
       'jsdoc/match-description': 0,
       'jsdoc/require-example': 0,
       'jsdoc/require-hyphen-before-param-description': ['warn', 'never', { tags: { '*': 'never' } }],
       'jsdoc/require-jsdoc': 0, // Making JSDoc optional
+      'jsdoc/require-param': ['warn', { checkDestructured: false }],
       'no-console': 0,
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
