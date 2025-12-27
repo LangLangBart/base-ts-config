@@ -17,6 +17,7 @@ import merge from 'lodash.merge'
  * @returns ESLint flat config
  */
 export default function config(options = {}, ...userConfigs) {
+  /** @type {Parameters<typeof import('@antfu/eslint-config').default>[0]} */
   const defaults = {
     formatters: true,
     isInEditor: false,
@@ -66,6 +67,7 @@ export default function config(options = {}, ...userConfigs) {
       'sonarjs/no-all-duplicated-branches': 'warn',
       'sonarjs/no-array-delete': 'warn',
       'sonarjs/no-associative-arrays': 'warn',
+      'sonarjs/no-async-constructor': 'warn',
       'sonarjs/no-collection-size-mischeck': 'warn',
       'sonarjs/no-duplicated-branches': 'warn',
       'sonarjs/no-element-overwrite': 'warn',
@@ -112,31 +114,25 @@ export default function config(options = {}, ...userConfigs) {
         'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
         'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
         'ts/explicit-module-boundary-types': 'warn',
+        'ts/no-deprecated': 'warn', // Catches deprecated API usage
+        'ts/require-await': 'warn', // Check functions actually need to be async
         'ts/strict-boolean-expressions': 0
       },
       tsconfigPath: 'tsconfig.json'
     }
   }
 
-  const merged = merge(defaults, options)
+  const { rules, ...environment } = merge(defaults, options)
 
   return antfu(
-    merged, // First to configure the environment (TypeScript, Stylistic, etc.)
+    environment, // First to configure the environment (TypeScript, Stylistic, etc.)
     { rules: jsdoc.configs['flat/contents-typescript'].rules },
     { rules: jsdoc.configs['flat/logical-typescript'].rules },
     { rules: jsdoc.configs['flat/requirements-typescript'].rules },
     { rules: jsdoc.configs['flat/stylistic-typescript'].rules },
     { rules: perfectionist.configs['recommended-natural'].rules },
     { rules: unicorn.configs.recommended.rules },
-    { rules: merged.rules }, // Repeated to override the presets above
-    {
-      files: ['**/*.js'],
-      rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
-    },
-    {
-      files: ['**/*.js'],
-      rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
-    },
+    { rules }, // Repeated to override the presets above
     {
       files: ['**/*.js'],
       rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
