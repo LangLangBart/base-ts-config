@@ -54,13 +54,13 @@ repos:
         name: markdown link check
         args: [--quiet]
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.46.0
+    rev: v0.47.0
     hooks:
       - id: markdownlint
         # Disable line-length/no-inline-html
         args: [--disable=MD013, --disable=MD033, --fix]
   - repo: https://github.com/lyz-code/yamlfix
-    rev: 1.19.0
+    rev: 1.19.1
     hooks:
       - id: yamlfix
         entry: env YAMLFIX_WHITELINES=1 YAMLFIX_SECTION_WHITELINES=1 yamlfix
