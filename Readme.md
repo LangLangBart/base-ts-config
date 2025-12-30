@@ -1,7 +1,5 @@
 # Base TypeScript Config
 
-A single, opinionated setup for my TypeScript projects
-
 - Opinionated ESLint Config based on [@antfu/eslint-config](https://github.com/antfu/eslint-config)
 - Opinionated [tsconfig.json](tsconfig.json)
 
@@ -26,7 +24,7 @@ package.json
 }
 ```
 
-eslint.config.js
+eslint.config.ts
 
 ```js
 import config from 'base-ts-config'
