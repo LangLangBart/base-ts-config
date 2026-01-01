@@ -36,6 +36,34 @@ export default function config(options = {}, ...userConfigs) {
       'no-console': 0,
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
+      'perfectionist/sort-classes': ['warn', {
+        groups: [
+          'index-signature',
+          ['static-property', 'static-accessor-property'],
+          ['static-get-method', 'static-set-method'],
+          ['static-method', 'static-function-property'],
+          ['protected-static-property', 'protected-static-accessor-property'],
+          ['protected-static-get-method', 'protected-static-set-method'],
+          ['protected-static-method', 'protected-static-function-property'],
+          ['private-static-property', 'private-static-accessor-property'],
+          ['private-static-get-method', 'private-static-set-method'],
+          ['private-static-method', 'private-static-function-property'],
+          'static-block',
+          ['property', 'accessor-property'],
+          ['get-method', 'set-method'],
+          ['protected-property', 'protected-accessor-property'],
+          ['protected-get-method', 'protected-set-method'],
+          ['private-property', 'private-accessor-property'],
+          ['private-get-method', 'private-set-method'],
+          'constructor',
+          ['method', 'function-property'],
+          ['protected-method', 'protected-function-property'],
+          ['private-method', 'private-function-property'],
+          'unknown'
+        ],
+        order: 'asc',
+        type: 'natural'
+      }],
       'perfectionist/sort-modules': ['warn', {
         groups: [
           'declare-enum',
@@ -125,14 +153,14 @@ export default function config(options = {}, ...userConfigs) {
   const { rules, ...environment } = merge(defaults, options)
 
   return antfu(
-    environment, // First to configure the environment (TypeScript, Stylistic, etc.)
+    environment, // First configure the environment (TypeScript, Stylistic, etc.)
     { rules: jsdoc.configs['flat/contents-typescript'].rules },
     { rules: jsdoc.configs['flat/logical-typescript'].rules },
     { rules: jsdoc.configs['flat/requirements-typescript'].rules },
     { rules: jsdoc.configs['flat/stylistic-typescript'].rules },
     { rules: perfectionist.configs['recommended-natural'].rules },
     { rules: unicorn.configs.recommended.rules },
-    { rules }, // Repeated to override the presets above
+    { rules }, // Override the presets above
     {
       files: ['**/*.js'],
       rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
