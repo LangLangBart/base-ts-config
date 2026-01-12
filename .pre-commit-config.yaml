@@ -43,7 +43,7 @@ repos:
       - id: fix-byte-order-marker
       - id: trailing-whitespace
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.40.0
+    rev: v1.42.0
     hooks:
       - id: typos
         args: [--format, brief, --write-changes, --force-exclude]
@@ -65,7 +65,7 @@ repos:
       - id: yamlfix
         entry: env YAMLFIX_WHITELINES=1 YAMLFIX_SECTION_WHITELINES=1 yamlfix
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.40.0
+    rev: v1.42.0
     hooks:
       - id: typos
         name: detect typos in commit message
@@ -79,7 +79,7 @@ repos:
         args: [--ignore, body-is-missing, --msg-filename]
         stages: [commit-msg]
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.10.0
+    rev: v4.11.2
     hooks:
       - id: commitizen
         name: check commit message structure

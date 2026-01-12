@@ -64,6 +64,14 @@ export default function config(options = {}, ...userConfigs) {
         order: 'asc',
         type: 'natural'
       }],
+      'perfectionist/sort-interfaces': [
+        'warn',
+        {
+          order: 'asc',
+          partitionByComment: true,
+          type: 'natural'
+        }
+      ],
       'perfectionist/sort-modules': ['warn', {
         groups: [
           'declare-enum',
