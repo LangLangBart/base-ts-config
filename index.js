@@ -96,6 +96,8 @@ export default function config(options = {}, ...userConfigs) {
       'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
       'unicorn/filename-case': ['warn', { cases: { kebabCase: true, pascalCase: true, snakeCase: true } }],
       'unicorn/no-array-reduce': 0,
+      // little benefit, find it cumbersome to deal with
+      'unicorn/no-array-reverse': 0,
       'unicorn/no-array-sort': 0,
       // See: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2406
       'unicorn/no-new-array': 0,
