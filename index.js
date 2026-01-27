@@ -37,6 +37,7 @@ export default function config(options = {}, ...userConfigs) {
       'perfectionist/sort-classes': ['warn', {
         groups: [
           'index-signature',
+          'static-readonly-property',
           ['static-property', 'static-accessor-property'],
           ['static-get-method', 'static-set-method'],
           ['static-method', 'static-function-property'],
