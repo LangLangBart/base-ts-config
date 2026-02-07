@@ -6,7 +6,7 @@
 ## Usage
 
 ```bash
-bun add github:LangLangBart/base-ts-config
+bun add --dev github:LangLangBart/base-ts-config
 ```
 
 > [!NOTE]
@@ -18,7 +18,7 @@ package.json
 
 ```json
 {
-  "dependencies": {
+  "devDependencies": {
     "base-ts-config": "github:LangLangBart/base-ts-config"
   }
 }
