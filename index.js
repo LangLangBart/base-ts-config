@@ -22,6 +22,7 @@ export default function config(options = {}, ...userConfigs) {
     isInEditor: false,
     rules: {
       // Disable/relax some rules to make it easier to write code
+      'antfu/consistent-list-newline': ['warn', { IfStatement: false }],
       'antfu/no-top-level-await': 0,
       'curly': 1,
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
@@ -126,8 +127,18 @@ export default function config(options = {}, ...userConfigs) {
         'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
         'ts/explicit-module-boundary-types': 'warn',
         'ts/no-deprecated': 'warn', // Catches deprecated API usage
+        'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
         'ts/require-await': 'warn', // Check functions actually need to be async
-        'ts/strict-boolean-expressions': 0
+        'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
+          allowAny: true,
+          allowNullableBoolean: true,
+          allowNullableEnum: false,
+          allowNullableNumber: true,
+          allowNullableObject: true,
+          allowNullableString: true,
+          allowNumber: true,
+          allowString: true
+        }]
       },
       tsconfigPath: 'tsconfig.json'
     }
