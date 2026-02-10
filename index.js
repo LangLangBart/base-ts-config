@@ -93,6 +93,11 @@ export default function config(options = {}, ...userConfigs) {
         order: 'asc',
         type: 'natural'
       }],
+      'perfectionist/sort-objects': ['warn', {
+        order: 'asc',
+        partitionByComment: true,
+        type: 'natural'
+      }],
       'prefer-object-has-own': 1,
       'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }],
       'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
@@ -148,6 +153,7 @@ export default function config(options = {}, ...userConfigs) {
 
   return antfu(
     environment, // First configure the environment (TypeScript, Stylistic, etc.)
+    { plugins: { jsdoc, perfectionist, unicorn } },
     { rules: jsdoc.configs['flat/contents-typescript'].rules },
     { rules: jsdoc.configs['flat/logical-typescript'].rules },
     { rules: jsdoc.configs['flat/requirements-typescript'].rules },
