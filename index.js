@@ -22,7 +22,6 @@ export default function config(options = {}, ...userConfigs) {
     isInEditor: false,
     rules: {
       // Disable/relax some rules to make it easier to write code
-      'antfu/consistent-list-newline': ['warn', { IfStatement: false }],
       'antfu/no-top-level-await': 0,
       'curly': 1,
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
