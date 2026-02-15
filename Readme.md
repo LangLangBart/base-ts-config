@@ -30,7 +30,7 @@ eslint.config.ts
 import config from 'base-ts-config'
 
 export default config({
-  // optional project-specific overrides
+  // Optional project-specific overrides
   ignores: ['some/extra/path/']
 })
 ```

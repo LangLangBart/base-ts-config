@@ -1,8 +1,9 @@
 /**
- * @file Opinionated ESLint Wrapper around  https://github.com/antfu/eslint-config
+ * @file Opinionated ESLint Wrapper around: https://github.com/antfu/eslint-config
  */
 
-import antfu from '@antfu/eslint-config'
+import antfu, { GLOB_JS, GLOB_MARKDOWN_CODE, GLOB_SRC, GLOB_TS } from '@antfu/eslint-config'
+import eslintjs from '@eslint/js'
 import parser from '@typescript-eslint/parser'
 import jsdoc from 'eslint-plugin-jsdoc'
 import { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc/getJsdocProcessorPlugin.js'
@@ -21,9 +22,23 @@ export default function config(options = {}, ...userConfigs) {
     formatters: true,
     isInEditor: false,
     rules: {
+      // Complexity rules off for now but desireful to have
+      // 'complexity': 'warn',
+      // 'max-depth': ['warn', { max: 5 }],
+      // 'max-lines': ['warn', { max: 1500, skipComments: true }],
+      // 'max-nested-callbacks': ['warn', 5],
+      // 'max-params': ['warn', { max: 5 }],
+
       // Disable/relax some rules to make it easier to write code
       'antfu/no-top-level-await': 0,
+      'arrow-body-style': 'warn',
+      'capitalized-comments': ['error', 'always', { // Wrap first word in quotes disables the rule too
+        ignoreConsecutiveComments: true,
+        ignoreInlineComments: true,
+        ignorePattern: /pragma|ignore|biome-ignore|import |tslint:/v.source
+      }],
       'curly': 1,
+      'guard-for-in': 'error',
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
       'jsdoc/match-description': 0,
@@ -31,9 +46,16 @@ export default function config(options = {}, ...userConfigs) {
       'jsdoc/require-hyphen-before-param-description': ['warn', 'never', { tags: { '*': 'never' } }],
       'jsdoc/require-jsdoc': 0, // Making JSDoc optional
       'jsdoc/require-param': ['warn', { checkDestructured: false }],
+      'logical-assignment-operators': ['warn', 'always', { enforceForIfStatements: true }],
       'no-console': 0,
+      'no-else-return': ['error', { allowElseIf: false }],
+      'no-lone-blocks': 'error',
+      'no-lonely-if': 'warn',
+      'no-void': ['warn', { allowAsStatement: true }],
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
+      'object-shorthand': ['warn', 'always', { avoidExplicitReturnArrows: true }],
+      'operator-assignment': ['warn', 'always'],
       'perfectionist/sort-classes': ['warn', {
         groups: [
           'index-signature',
@@ -102,11 +124,9 @@ export default function config(options = {}, ...userConfigs) {
       'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
       'unicorn/filename-case': ['warn', { cases: { kebabCase: true, pascalCase: true, snakeCase: true } }],
       'unicorn/no-array-reduce': 0,
-      // little benefit, find it cumbersome to deal with
-      'unicorn/no-array-reverse': 0,
+      'unicorn/no-array-reverse': 0, // Little benefit, find it cumbersome to deal with
       'unicorn/no-array-sort': 0,
-      // See: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2406
-      'unicorn/no-new-array': 0,
+      'unicorn/no-new-array': 0, // See: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2406
       'unicorn/no-null': 0,
       'unicorn/no-process-exit': 0,
       'unicorn/prevent-abbreviations': ['warn', { checkFilenames: false }]
@@ -123,8 +143,8 @@ export default function config(options = {}, ...userConfigs) {
       }
     },
     typescript: {
-    // Ignore fenced Markdown code blocks and AssemblyScript files
-      ignoresTypeAware: ['**/*.md/*.ts', '**/*.as.ts'],
+      // Ignore fenced Markdown code blocks and AssemblyScript files
+      ignoresTypeAware: [GLOB_MARKDOWN_CODE, '**/*.as.ts'],
       // Disable/relax some type-aware rules that are too strict
       overridesTypeAware: {
         'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
@@ -153,29 +173,37 @@ export default function config(options = {}, ...userConfigs) {
   return antfu(
     environment, // First configure the environment (TypeScript, Stylistic, etc.)
     { plugins: { jsdoc, perfectionist, unicorn } },
-    { rules: jsdoc.configs['flat/contents-typescript'].rules },
-    { rules: jsdoc.configs['flat/logical-typescript'].rules },
-    { rules: jsdoc.configs['flat/requirements-typescript'].rules },
-    { rules: jsdoc.configs['flat/stylistic-typescript'].rules },
-    { rules: perfectionist.configs['recommended-natural'].rules },
-    { rules: unicorn.configs.recommended.rules },
-    { rules }, // Override the presets above
+    { rules: {
+      ...eslintjs.configs.recommended.rules,
+      ...jsdoc.configs['flat/contents-typescript'].rules,
+      ...jsdoc.configs['flat/logical-typescript'].rules,
+      ...jsdoc.configs['flat/requirements-typescript'].rules,
+      ...jsdoc.configs['flat/stylistic-typescript'].rules,
+      ...perfectionist.configs['recommended-natural'].rules,
+      ...unicorn.configs.recommended.rules,
+      ...rules // Override the presets above
+    } },
     {
-      files: ['**/*.js'],
+      // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
+      files: [GLOB_TS, GLOB_MARKDOWN_CODE],
+      rules: { 'no-redeclare': 0, 'no-undef': 0, 'no-unused-vars': 0 }
+    },
+    {
+      files: [GLOB_JS],
       rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
     },
     {
-      files: ['src/**/*.{js,ts}'],
+      files: [`src/${GLOB_SRC}`],
       rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
     },
     {
-      files: ['**/*.{js,ts}'],
-      ignores: ['**/*.md/*.{js,ts}', '**/*.{d,as,test}.{js,ts}'],
+      files: [GLOB_SRC],
+      ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
       rules: { 'jsdoc/require-file-overview': 1 }
     },
     {
       // Lint @example tags
-      files: ['**/*.ts'],
+      files: [GLOB_TS],
       // The regex is needed to extract the code to be linted from the @example tag.
       plugins: { name: getJsdocProcessorPlugin({ exampleCodeRegex: /```[jt]s\n([\s\S]*?)```/g, matchingFileName: 'name.md/*.ts', parser }) },
       processor: 'name/examples'
