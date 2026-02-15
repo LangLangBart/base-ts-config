@@ -32,13 +32,13 @@ export default function config(options = {}, ...userConfigs) {
       // Disable/relax some rules to make it easier to write code
       'antfu/no-top-level-await': 0,
       'arrow-body-style': 'warn',
-      'capitalized-comments': ['error', 'always', { // Wrap first word in quotes disables the rule too
+      'capitalized-comments': ['warn', 'always', { // Wrap first word in quotes disables the rule too
         ignoreConsecutiveComments: true,
         ignoreInlineComments: true,
         ignorePattern: /pragma|ignore|biome-ignore|import |tslint:/v.source
       }],
-      'curly': 1,
-      'guard-for-in': 'error',
+      'curly': 'warn',
+      'guard-for-in': 'warn',
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
       'jsdoc/match-description': 0,
@@ -48,9 +48,12 @@ export default function config(options = {}, ...userConfigs) {
       'jsdoc/require-param': ['warn', { checkDestructured: false }],
       'logical-assignment-operators': ['warn', 'always', { enforceForIfStatements: true }],
       'no-console': 0,
-      'no-else-return': ['error', { allowElseIf: false }],
-      'no-lone-blocks': 'error',
+      'no-else-return': ['warn', { allowElseIf: false }],
+      'no-lone-blocks': 'warn',
       'no-lonely-if': 'warn',
+      'no-multi-assign': 'warn',
+      'no-shadow': 'warn',
+      'no-useless-assignment': 'warn',
       'no-void': ['warn', { allowAsStatement: true }],
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
@@ -119,7 +122,7 @@ export default function config(options = {}, ...userConfigs) {
         partitionByComment: true,
         type: 'natural'
       }],
-      'prefer-object-has-own': 1,
+      'prefer-object-has-own': 'warn',
       'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }],
       'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
       'unicorn/filename-case': ['warn', { cases: { kebabCase: true, pascalCase: true, snakeCase: true } }],
