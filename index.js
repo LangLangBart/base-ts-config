@@ -2,8 +2,9 @@
  * @file Opinionated ESLint Wrapper around: https://github.com/antfu/eslint-config
  */
 
-import antfu, { GLOB_JS, GLOB_MARKDOWN_CODE, GLOB_SRC, GLOB_TS } from '@antfu/eslint-config'
+import antfu, { GLOB_JS, GLOB_MARKDOWN_CODE, GLOB_SRC, GLOB_TS, renameRules } from '@antfu/eslint-config'
 import eslintjs from '@eslint/js'
+import tseslint from '@typescript-eslint/eslint-plugin'
 import parser from '@typescript-eslint/parser'
 import jsdoc from 'eslint-plugin-jsdoc'
 import { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc/getJsdocProcessorPlugin.js'
@@ -148,14 +149,35 @@ export default function config(options = {}, ...userConfigs) {
     typescript: {
       // Ignore fenced Markdown code blocks and AssemblyScript files
       ignoresTypeAware: [GLOB_MARKDOWN_CODE, '**/*.as.ts'],
-      // Disable/relax some type-aware rules that are too strict
+      // Enable more type-checked rules and apply custom overrides
       overridesTypeAware: {
+        // https://typescript-eslint.io/users/configs#recommended-configurations
+        // Contains recommended + additional recommended rules that require type infos
+        ...renameRules(merge({}, ...tseslint.configs['flat/recommended-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        // Contains strict + additional strict rules require type infos
+        ...renameRules(merge({}, ...tseslint.configs['flat/strict-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        // Contains stylistic + additional stylistic rules that require type infos
+        ...renameRules(merge({}, ...tseslint.configs['flat/stylistic-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        // Disabled recommended rules
+        'ts/no-confusing-void-expression': 0,
+        'ts/no-dynamic-delete': 0,
+        'ts/no-empty-function': 0,
+        'ts/no-explicit-any': 0,
+        'ts/no-misused-spread': 0, // Should be enabled https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
+        'ts/no-non-null-assertion': 0,
+        'ts/no-unused-vars': 0,
+        'ts/prefer-regexp-exec': 0,
+        'ts/use-unknown-in-catch-callback-variable': 0,
+        // Adjusted recommended rules
+        '@typescript-eslint/restrict-plus-operands': 'warn',
         'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
-        'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
-        'ts/explicit-module-boundary-types': 'warn',
-        'ts/no-deprecated': 'warn', // Catches deprecated API usage
         'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
-        'ts/require-await': 'warn', // Check functions actually need to be async
+        'ts/restrict-template-expressions': 'warn',
+        // Additional rules
+        'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
+        'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
+        'ts/explicit-module-boundary-types': 'warn',
+        'ts/prefer-readonly': 'warn',
         'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
           allowAny: true,
           allowNullableBoolean: true,
@@ -175,7 +197,7 @@ export default function config(options = {}, ...userConfigs) {
 
   return antfu(
     environment, // First configure the environment (TypeScript, Stylistic, etc.)
-    { plugins: { jsdoc, perfectionist, unicorn } },
+    { plugins: { jsdoc, perfectionist, unicorn } }, // https://github.com/antfu/eslint-config/issues/820
     { rules: {
       ...eslintjs.configs.recommended.rules,
       ...jsdoc.configs['flat/contents-typescript'].rules,
