@@ -54,7 +54,6 @@ export default function config(options = {}, ...userConfigs) {
       'no-lonely-if': 'warn',
       'no-multi-assign': 'warn',
       'no-shadow': 'warn',
-      'no-useless-assignment': 'warn',
       'no-void': ['warn', { allowAsStatement: true }],
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
@@ -174,9 +173,11 @@ export default function config(options = {}, ...userConfigs) {
         'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
         'ts/restrict-template-expressions': 'warn',
         // Additional rules
+        'ts/consistent-type-exports': 'warn',
         'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
         'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
         'ts/explicit-module-boundary-types': 'warn',
+        'ts/no-useless-empty-export': 'warn',
         'ts/prefer-readonly': 'warn',
         'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
           allowAny: true,
