@@ -2,6 +2,7 @@
   "name": "base-ts-config",
   "type": "module",
   "version": "1.0.0",
+  "license": "Unlicense",
   "repository": "github:LangLangBart/base-ts-config",
   "keywords": [
     "eslint",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@antfu/eslint-config": "^7.4.3",
+    "@eslint/js": "^10.0.1",
     "@prettier/plugin-xml": "^3.4.2",
     "@types/bun": "^1.3.9",
     "eslint-plugin-format": "^1.4.0",
