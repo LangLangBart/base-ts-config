@@ -18,11 +18,79 @@ import merge from 'lodash.merge'
  * @returns ESLint flat config
  */
 export default function config(options = {}, ...userConfigs) {
-  /** @type {Parameters<typeof import('@antfu/eslint-config').default>[0]} */
-  const defaults = {
+  return antfu(merge({
     formatters: true,
     isInEditor: false,
+    stylistic: {
+      overrides: {
+        'style/brace-style': ['warn', 'stroustrup'],
+        'style/comma-dangle': ['warn', 'never'],
+        'style/function-paren-newline': 'warn',
+        'style/no-extra-semi': 'warn',
+        'style/nonblock-statement-body-position': ['warn', 'below'],
+        'style/operator-linebreak': ['warn', 'after'],
+        'style/padding-line-between-statements': ['warn', { blankLine: 'never', next: 'case', prev: 'case' }]
+      }
+    },
+    typescript: {
+      // Ignore fenced Markdown code blocks and AssemblyScript files
+      ignoresTypeAware: [GLOB_MARKDOWN_CODE, '**/*.as.ts'],
+      // Enable more type-checked rules and apply custom overrides
+      overridesTypeAware: {
+        // https://typescript-eslint.io/users/configs#recommended-configurations
+        // Contains recommended + additional recommended rules that require type infos
+        ...renameRules(merge({}, ...tseslint.configs['flat/recommended-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        // Contains strict + additional strict rules require type infos
+        ...renameRules(merge({}, ...tseslint.configs['flat/strict-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        // Contains stylistic + additional stylistic rules that require type infos
+        ...renameRules(merge({}, ...tseslint.configs['flat/stylistic-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        // Disabled recommended rules
+        'ts/no-confusing-void-expression': 0,
+        'ts/no-dynamic-delete': 0,
+        'ts/no-empty-function': 0,
+        'ts/no-explicit-any': 0,
+        'ts/no-misused-spread': 0, // Should be enabled https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
+        'ts/no-non-null-assertion': 0,
+        'ts/no-unused-vars': 0,
+        'ts/prefer-regexp-exec': 0,
+        'ts/use-unknown-in-catch-callback-variable': 0,
+        // Adjusted recommended rules
+        '@typescript-eslint/restrict-plus-operands': 'warn',
+        'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
+        'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
+        'ts/restrict-template-expressions': 'warn',
+        // Additional rules
+        'ts/consistent-type-exports': 'warn',
+        'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
+        'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
+        'ts/explicit-module-boundary-types': 'warn',
+        'ts/no-useless-empty-export': 'warn',
+        'ts/prefer-readonly': 'warn',
+        'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
+          allowAny: true,
+          allowNullableBoolean: true,
+          allowNullableEnum: false,
+          allowNullableNumber: true,
+          allowNullableObject: true,
+          allowNullableString: true,
+          allowNumber: true,
+          allowString: true
+        }]
+      },
+      tsconfigPath: 'tsconfig.json'
+    }
+  }, options)).append({
+    // Additional rules scoped to source files only
+    files: [GLOB_SRC],
     rules: {
+      ...eslintjs.configs.recommended.rules,
+      ...jsdoc.configs['flat/contents-typescript'].rules,
+      ...jsdoc.configs['flat/logical-typescript'].rules,
+      ...jsdoc.configs['flat/requirements-typescript'].rules,
+      ...jsdoc.configs['flat/stylistic-typescript'].rules,
+      ...perfectionist.configs['recommended-natural'].rules,
+      ...unicorn.configs.recommended.rules,
+
       // Complexity rules off for now but desireful to have
       // 'complexity': 'warn',
       // 'max-depth': ['warn', { max: 5 }],
@@ -88,14 +156,11 @@ export default function config(options = {}, ...userConfigs) {
         order: 'asc',
         type: 'natural'
       }],
-      'perfectionist/sort-interfaces': [
-        'warn',
-        {
-          order: 'asc',
-          partitionByComment: true,
-          type: 'natural'
-        }
-      ],
+      'perfectionist/sort-interfaces': ['warn', {
+        order: 'asc',
+        partitionByComment: true,
+        type: 'natural'
+      }],
       'perfectionist/sort-modules': ['warn', {
         groups: [
           'declare-enum',
@@ -133,107 +198,26 @@ export default function config(options = {}, ...userConfigs) {
       'unicorn/no-null': 0,
       'unicorn/no-process-exit': 0,
       'unicorn/prevent-abbreviations': ['warn', { checkFilenames: false }]
-    },
-    stylistic: {
-      overrides: {
-        'style/brace-style': ['warn', 'stroustrup'],
-        'style/comma-dangle': ['warn', 'never'],
-        'style/function-paren-newline': 'warn',
-        'style/no-extra-semi': 'warn',
-        'style/nonblock-statement-body-position': ['warn', 'below'],
-        'style/operator-linebreak': ['warn', 'after'],
-        'style/padding-line-between-statements': ['warn', { blankLine: 'never', next: 'case', prev: 'case' }]
-      }
-    },
-    typescript: {
-      // Ignore fenced Markdown code blocks and AssemblyScript files
-      ignoresTypeAware: [GLOB_MARKDOWN_CODE, '**/*.as.ts'],
-      // Enable more type-checked rules and apply custom overrides
-      overridesTypeAware: {
-        // https://typescript-eslint.io/users/configs#recommended-configurations
-        // Contains recommended + additional recommended rules that require type infos
-        ...renameRules(merge({}, ...tseslint.configs['flat/recommended-type-checked']).rules, { '@typescript-eslint': 'ts' }),
-        // Contains strict + additional strict rules require type infos
-        ...renameRules(merge({}, ...tseslint.configs['flat/strict-type-checked']).rules, { '@typescript-eslint': 'ts' }),
-        // Contains stylistic + additional stylistic rules that require type infos
-        ...renameRules(merge({}, ...tseslint.configs['flat/stylistic-type-checked']).rules, { '@typescript-eslint': 'ts' }),
-        // Disabled recommended rules
-        'ts/no-confusing-void-expression': 0,
-        'ts/no-dynamic-delete': 0,
-        'ts/no-empty-function': 0,
-        'ts/no-explicit-any': 0,
-        'ts/no-misused-spread': 0, // Should be enabled https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
-        'ts/no-non-null-assertion': 0,
-        'ts/no-unused-vars': 0,
-        'ts/prefer-regexp-exec': 0,
-        'ts/use-unknown-in-catch-callback-variable': 0,
-        // Adjusted recommended rules
-        '@typescript-eslint/restrict-plus-operands': 'warn',
-        'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
-        'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
-        'ts/restrict-template-expressions': 'warn',
-        // Additional rules
-        'ts/consistent-type-exports': 'warn',
-        'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
-        'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
-        'ts/explicit-module-boundary-types': 'warn',
-        'ts/no-useless-empty-export': 'warn',
-        'ts/prefer-readonly': 'warn',
-        'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
-          allowAny: true,
-          allowNullableBoolean: true,
-          allowNullableEnum: false,
-          allowNullableNumber: true,
-          allowNullableObject: true,
-          allowNullableString: true,
-          allowNumber: true,
-          allowString: true
-        }]
-      },
-      tsconfigPath: 'tsconfig.json'
     }
-  }
-
-  const { rules, ...environment } = merge(defaults, options)
-
-  return antfu(
-    environment, // First configure the environment (TypeScript, Stylistic, etc.)
-    { plugins: { jsdoc, perfectionist, unicorn } }, // https://github.com/antfu/eslint-config/issues/820
-    { rules: {
-      ...eslintjs.configs.recommended.rules,
-      ...jsdoc.configs['flat/contents-typescript'].rules,
-      ...jsdoc.configs['flat/logical-typescript'].rules,
-      ...jsdoc.configs['flat/requirements-typescript'].rules,
-      ...jsdoc.configs['flat/stylistic-typescript'].rules,
-      ...perfectionist.configs['recommended-natural'].rules,
-      ...unicorn.configs.recommended.rules,
-      ...rules // Override the presets above
-    } },
-    {
-      // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
-      files: [GLOB_TS, GLOB_MARKDOWN_CODE],
-      rules: { 'no-redeclare': 0, 'no-undef': 0, 'no-unused-vars': 0 }
-    },
-    {
-      files: [GLOB_JS],
-      rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
-    },
-    {
-      files: [`src/${GLOB_SRC}`],
-      rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
-    },
-    {
-      files: [GLOB_SRC],
-      ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
-      rules: { 'jsdoc/require-file-overview': 1 }
-    },
-    {
-      // Lint @example tags
-      files: [GLOB_TS],
-      // The regex is needed to extract the code to be linted from the @example tag.
-      plugins: { name: getJsdocProcessorPlugin({ exampleCodeRegex: /```[jt]s\n([\s\S]*?)```/g, matchingFileName: 'name.md/*.ts', parser }) },
-      processor: 'name/examples'
-    },
-    ...userConfigs
-  )
+  }, {
+    // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
+    files: [GLOB_TS, GLOB_MARKDOWN_CODE],
+    rules: { 'no-redeclare': 0, 'no-undef': 0, 'no-unused-vars': 0 }
+  }, {
+    files: [GLOB_JS],
+    rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
+  }, {
+    files: [`src/${GLOB_SRC}`],
+    rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
+  }, {
+    files: [GLOB_SRC],
+    ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
+    rules: { 'jsdoc/require-file-overview': 1 }
+  }, {
+    // Lint @example tags
+    files: [GLOB_TS],
+    // The regex is needed to extract the code to be linted from the @example tag.
+    plugins: { name: getJsdocProcessorPlugin({ exampleCodeRegex: /```[jt]s\n([\s\S]*?)```/g, matchingFileName: 'name.md/*.ts', parser }) },
+    processor: 'name/examples'
+  }, ...userConfigs)
 }
