@@ -54,7 +54,7 @@ export default function config(options = {}, ...userConfigs) {
         'ts/no-misused-spread': 0, // Should be enabled https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
         'ts/no-non-null-assertion': 0,
         'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
-        'ts/no-unused-vars': 0,
+        'ts/no-unused-vars': 0, // Handled by unused-imports/no-unused-vars
         'ts/prefer-regexp-exec': 0,
         'ts/restrict-plus-operands': 'warn', // Overrides adjustments by antfu
         'ts/restrict-template-expressions': 'warn',
@@ -127,6 +127,7 @@ export default function config(options = {}, ...userConfigs) {
       'no-lonely-if': 'warn',
       'no-multi-assign': 'warn',
       'no-shadow': 'warn',
+      'no-unused-vars': 0, // Handled by unused-imports/no-unused-vars
       'no-void': ['warn', { allowAsStatement: true }],
       'node/prefer-global/buffer': 0,
       'node/prefer-global/process': 0,
@@ -207,7 +208,7 @@ export default function config(options = {}, ...userConfigs) {
   }, {
     // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
     files: [GLOB_TS, GLOB_MARKDOWN_CODE],
-    rules: { 'no-redeclare': 0, 'no-undef': 0, 'no-unused-vars': 0 }
+    rules: { 'no-redeclare': 0, 'no-undef': 0 }
   }, {
     files: [GLOB_JS],
     rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
