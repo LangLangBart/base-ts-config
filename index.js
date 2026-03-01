@@ -18,9 +18,11 @@ import merge from 'lodash.merge'
  * @returns ESLint flat config
  */
 export default function config(options = {}, ...userConfigs) {
-  return antfu(merge({
+  // Enables type information to link rule names to their documentation on hover
+  /** @type {Parameters<typeof import('@antfu/eslint-config').default>[0]} */
+  const defaults = {
     formatters: true,
-    isInEditor: false,
+    isInEditor: false, // Keeps prefer-const auto-fixable on save (let → const)
     stylistic: {
       overrides: {
         'style/brace-style': ['warn', 'stroustrup'],
@@ -44,26 +46,25 @@ export default function config(options = {}, ...userConfigs) {
         ...renameRules(merge({}, ...tseslint.configs['flat/strict-type-checked']).rules, { '@typescript-eslint': 'ts' }),
         // Contains stylistic + additional stylistic rules that require type infos
         ...renameRules(merge({}, ...tseslint.configs['flat/stylistic-type-checked']).rules, { '@typescript-eslint': 'ts' }),
-        // Disabled recommended rules
+        // Adjusted recommended rules
+        'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
         'ts/no-confusing-void-expression': 0,
-        'ts/no-dynamic-delete': 0,
         'ts/no-empty-function': 0,
         'ts/no-explicit-any': 0,
         'ts/no-misused-spread': 0, // Should be enabled https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
         'ts/no-non-null-assertion': 0,
+        'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
         'ts/no-unused-vars': 0,
         'ts/prefer-regexp-exec': 0,
-        'ts/use-unknown-in-catch-callback-variable': 0,
-        // Adjusted recommended rules
-        '@typescript-eslint/restrict-plus-operands': 'warn',
-        'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
-        'ts/no-unnecessary-condition': ['warn', { allowConstantLoopConditions: 'always' }],
+        'ts/restrict-plus-operands': 'warn', // Overrides adjustments by antfu
         'ts/restrict-template-expressions': 'warn',
+        'ts/use-unknown-in-catch-callback-variable': 0,
         // Additional rules
         'ts/consistent-type-exports': 'warn',
         'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
         'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
         'ts/explicit-module-boundary-types': 'warn',
+        'ts/no-dynamic-delete': 0,
         'ts/no-useless-empty-export': 'warn',
         'ts/prefer-readonly': 'warn',
         'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
@@ -79,7 +80,11 @@ export default function config(options = {}, ...userConfigs) {
       },
       tsconfigPath: 'tsconfig.json'
     }
-  }, options)).append({
+  }
+
+  const { rules: userRules, ...antfuOptions } = merge(defaults, options)
+
+  return antfu(antfuOptions).append({
     // Additional rules scoped to source files only
     files: [GLOB_SRC],
     rules: {
@@ -219,5 +224,8 @@ export default function config(options = {}, ...userConfigs) {
     // The regex is needed to extract the code to be linted from the @example tag.
     plugins: { name: getJsdocProcessorPlugin({ exampleCodeRegex: /```[jt]s\n([\s\S]*?)```/g, matchingFileName: 'name.md/*.ts', parser }) },
     processor: 'name/examples'
-  }, ...userConfigs)
+    // Let user options.rules override any of the ones above
+  }, {
+    rules: userRules ?? {}
+  }, ...userConfigs).disableRulesFix(['unused-imports/no-unused-imports'])
 }
