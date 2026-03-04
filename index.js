@@ -214,6 +214,7 @@ export default function config(options = {}, ...userConfigs) {
     rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
   }, {
     files: [`src/${GLOB_SRC}`],
+    ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
     rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
   }, {
     files: [GLOB_SRC],
