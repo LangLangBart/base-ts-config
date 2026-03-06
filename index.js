@@ -7,7 +7,6 @@ import e18e from '@e18e/eslint-plugin'
 import eslintjs from '@eslint/js'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import parser from '@typescript-eslint/parser'
-import { deepmerge } from 'deepmerge-ts'
 import jsdoc from 'eslint-plugin-jsdoc'
 import { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc/getJsdocProcessorPlugin.js'
 import perfectionist from 'eslint-plugin-perfectionist'
@@ -83,7 +82,7 @@ export default function config(options = {}, ...userConfigs) {
     }
   }
 
-  const { rules: userRules, ...antfuOptions } = deepmerge(defaults, options)
+  const { rules: userRules, ...antfuOptions } = deepMerge(defaults, options)
 
   return antfu(antfuOptions).append({
     // Additional rules scoped to source files only
@@ -114,7 +113,9 @@ export default function config(options = {}, ...userConfigs) {
         ignorePattern: /pragma|ignore|biome-ignore|import |tslint:/v.source
       }],
       'curly': 'warn',
-      'e18e/prefer-static-regex': 0,
+      'e18e/prefer-array-fill': 0, // Causes types errors
+      'e18e/prefer-array-from-map': 0, // Array.from(x, fn) is slower than spread on bun
+      'e18e/prefer-static-regex': 0, // Good to know, but better review and act as needed
       'guard-for-in': 'warn',
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
@@ -218,10 +219,7 @@ export default function config(options = {}, ...userConfigs) {
   }, {
     files: [`src/${GLOB_SRC}`],
     ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
-    rules: {
-      'e18e/prefer-static-regex': 'warn',
-      'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }]
-    }
+    rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
   }, {
     files: [GLOB_SRC],
     ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
@@ -236,4 +234,17 @@ export default function config(options = {}, ...userConfigs) {
   }, {
     rules: userRules ?? {}
   }, ...userConfigs).disableRulesFix(['unused-imports/no-unused-imports'])
+}
+
+function deepMerge(target, override) {
+  const isObject = v => v !== null && typeof v === 'object' && !Array.isArray(v)
+  const result = { ...target }
+  for (const key of Object.keys(override)) {
+    const value = override[key]
+    if (value === undefined) {
+      continue
+    }
+    result[key] = isObject(value) && isObject(result[key]) ? deepMerge(result[key], value) : value
+  }
+  return result
 }
