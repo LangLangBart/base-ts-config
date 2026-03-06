@@ -3,14 +3,15 @@
  */
 
 import antfu, { GLOB_JS, GLOB_MARKDOWN_CODE, GLOB_SRC, GLOB_TS, renameRules } from '@antfu/eslint-config'
+import e18e from '@e18e/eslint-plugin'
 import eslintjs from '@eslint/js'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import parser from '@typescript-eslint/parser'
+import { deepmerge } from 'deepmerge-ts'
 import jsdoc from 'eslint-plugin-jsdoc'
 import { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc/getJsdocProcessorPlugin.js'
 import perfectionist from 'eslint-plugin-perfectionist'
 import unicorn from 'eslint-plugin-unicorn'
-import merge from 'lodash.merge'
 
 /**
  * @param {object} options     Configuration options passed to antfu
@@ -41,11 +42,11 @@ export default function config(options = {}, ...userConfigs) {
       overridesTypeAware: {
         // https://typescript-eslint.io/users/configs#recommended-configurations
         // Contains recommended + additional recommended rules that require type infos
-        ...renameRules(merge({}, ...tseslint.configs['flat/recommended-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        ...renameRules(tseslint.configs['recommended-type-checked'].rules, { '@typescript-eslint': 'ts' }),
         // Contains strict + additional strict rules require type infos
-        ...renameRules(merge({}, ...tseslint.configs['flat/strict-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        ...renameRules(tseslint.configs['strict-type-checked'].rules, { '@typescript-eslint': 'ts' }),
         // Contains stylistic + additional stylistic rules that require type infos
-        ...renameRules(merge({}, ...tseslint.configs['flat/stylistic-type-checked']).rules, { '@typescript-eslint': 'ts' }),
+        ...renameRules(tseslint.configs['stylistic-type-checked'].rules, { '@typescript-eslint': 'ts' }),
         // Adjusted recommended rules
         'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
         'ts/no-confusing-void-expression': 0,
@@ -82,12 +83,13 @@ export default function config(options = {}, ...userConfigs) {
     }
   }
 
-  const { rules: userRules, ...antfuOptions } = merge(defaults, options)
+  const { rules: userRules, ...antfuOptions } = deepmerge(defaults, options)
 
   return antfu(antfuOptions).append({
     // Additional rules scoped to source files only
     files: [GLOB_SRC],
     rules: {
+      ...e18e.configs.recommended.rules,
       ...eslintjs.configs.recommended.rules,
       ...jsdoc.configs['flat/contents-typescript'].rules,
       ...jsdoc.configs['flat/logical-typescript'].rules,
@@ -112,6 +114,7 @@ export default function config(options = {}, ...userConfigs) {
         ignorePattern: /pragma|ignore|biome-ignore|import |tslint:/v.source
       }],
       'curly': 'warn',
+      'e18e/prefer-static-regex': 0,
       'guard-for-in': 'warn',
       'jsdoc/check-line-alignment': ['warn', 'always', { tags: ['param'] }],
       'jsdoc/check-param-names': ['warn', { checkDestructured: false }],
@@ -215,7 +218,10 @@ export default function config(options = {}, ...userConfigs) {
   }, {
     files: [`src/${GLOB_SRC}`],
     ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
-    rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
+    rules: {
+      'e18e/prefer-static-regex': 'warn',
+      'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }]
+    }
   }, {
     files: [GLOB_SRC],
     ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
