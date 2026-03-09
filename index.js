@@ -137,64 +137,21 @@ export default function config(options = {}, ...userConfigs) {
       'node/prefer-global/process': 0,
       'object-shorthand': ['warn', 'always', { avoidExplicitReturnArrows: true }],
       'operator-assignment': ['warn', 'always'],
-      'perfectionist/sort-classes': ['warn', {
-        groups: [
-          'index-signature',
-          'static-readonly-property',
-          ['static-property', 'static-accessor-property'],
-          ['static-get-method', 'static-set-method'],
-          ['static-method', 'static-function-property'],
-          ['protected-static-property', 'protected-static-accessor-property'],
-          ['protected-static-get-method', 'protected-static-set-method'],
-          ['protected-static-method', 'protected-static-function-property'],
-          ['private-static-property', 'private-static-accessor-property'],
-          ['private-static-get-method', 'private-static-set-method'],
-          ['private-static-method', 'private-static-function-property'],
-          'static-block',
-          ['property', 'accessor-property'],
-          ['get-method', 'set-method'],
-          ['protected-property', 'protected-accessor-property'],
-          ['protected-get-method', 'protected-set-method'],
-          ['private-property', 'private-accessor-property'],
-          ['private-get-method', 'private-set-method'],
-          'constructor',
-          ['method', 'function-property'],
-          ['protected-method', 'protected-function-property'],
-          ['private-method', 'private-function-property'],
-          'unknown'
-        ],
+      'perfectionist/sort-classes': ['warn', { // Relocate 'static-method' before 'static-block' without hardcoding group members
+        groups: perfectionist.rules['sort-classes'].defaultOptions[0].groups
+          .filter(group => !(Array.isArray(group) && group.includes('static-method')))
+          .flatMap(group => group === 'static-block' ? [['static-method', 'static-function-property'], group] : [group]),
         order: 'asc',
         type: 'natural'
       }],
       'perfectionist/sort-interfaces': ['warn', {
         order: 'asc',
-        partitionByComment: true,
-        type: 'natural'
-      }],
-      'perfectionist/sort-modules': ['warn', {
-        groups: [
-          'declare-enum',
-          'export-enum',
-          'enum',
-          'declare-interface',
-          'export-interface',
-          'interface',
-          'declare-type',
-          'export-type',
-          'type',
-          'declare-class',
-          'class',
-          'export-class',
-          'declare-function',
-          'export-function',
-          'function'
-        ],
-        order: 'asc',
+        partitionByComment: { block: false, line: true }, // Ignore JSDOC block comments
         type: 'natural'
       }],
       'perfectionist/sort-objects': ['warn', {
         order: 'asc',
-        partitionByComment: true,
+        partitionByComment: { block: false, line: true }, // Ignore JSDOC block comments
         type: 'natural'
       }],
       'prefer-object-has-own': 'warn',
