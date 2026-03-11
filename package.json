@@ -1,7 +1,6 @@
 {
   "name": "base-ts-config",
   "type": "module",
-  "version": "1.0.0",
   "license": "Unlicense",
   "repository": "github:LangLangBart/base-ts-config",
   "keywords": [
@@ -12,8 +11,7 @@
   "types": "index.d.ts",
   "scripts": {
     "lint:fix": "eslint --cache --fix --max-warnings 0",
-    "type:check": "tsc --skipLibCheck",
-    "postinstall": "if type pre-commit >/dev/null; then pre-commit install --hook-type commit-msg --hook-type pre-commit; fi"
+    "type:check": "tsc --skipLibCheck"
   },
   "dependencies": {
     "@antfu/eslint-config": "^7.7.0",

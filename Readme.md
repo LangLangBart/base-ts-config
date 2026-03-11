@@ -6,13 +6,9 @@
 ## Usage
 
 ```bash
+# https://docs.npmjs.com/cli/v10/configuring-npm/package-json#github-urls
 bun add --dev github:LangLangBart/base-ts-config
 ```
-
-> [!NOTE]
-> This package is installed from GitHub, not the npm registry.
->
-> [GitHub URLs | npm Docs](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#github-urls)
 
 package.json
 
