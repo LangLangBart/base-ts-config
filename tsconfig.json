@@ -5,7 +5,7 @@
     "moduleDetection": "force", /* Ensures that every non-declaration file is treated as a module. */
     "module": "ESNext", /* Sets the module system for the program */
     "moduleResolution": "bundler", /* Never requires file extensions on relative paths in imports unlike to nodenext */
-    "types": ["bun-types"], /* @types/bun usually lags a week behind */
+    "types": ["bun-types"], /* @types/bun usually lags a week behind; TS6 @types/* are no longer auto-included */
     "strict": true, /* Wide range of type checking behavior that results in stronger guarantees of program correctness */
     "noFallthroughCasesInSwitch": true, /* Enable error reporting for fallthrough cases in switch statements. */
     "noImplicitOverride": true, /* Ensure overriding members in derived classes are marked with an override modifier. */
