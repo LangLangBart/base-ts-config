@@ -31,7 +31,8 @@ export default function config(options = {}, ...userConfigs) {
         'style/no-extra-semi': 'warn',
         'style/nonblock-statement-body-position': ['warn', 'below'],
         'style/operator-linebreak': ['warn', 'after'],
-        'style/padding-line-between-statements': ['warn', { blankLine: 'never', next: 'case', prev: 'case' }]
+        'style/padding-line-between-statements': ['warn', { blankLine: 'never', next: 'case', prev: 'case' }],
+        'style/quotes': ['warn', 'single', { allowTemplateLiterals: 'avoidEscape', avoidEscape: true }]
       }
     },
     typescript: {
