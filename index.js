@@ -111,7 +111,10 @@ export default function config(options = {}, ...userConfigs) {
       'capitalized-comments': ['warn', 'always', { // Wrap first word in quotes disables the rule too
         ignoreConsecutiveComments: true,
         ignoreInlineComments: true,
-        ignorePattern: /pragma|ignore|biome-ignore|import |tslint:/v.source
+        ignorePattern: [
+          /pragma|ignore|biome-ignore|tslint:/v,
+          /const |let |import |export |function |class |if \(|for \(|while \(|switch \(|console\.log\(/v
+        ].map(r => r.source).join('|')
       }],
       'curly': 'warn',
       'e18e/prefer-array-fill': 0, // Causes types errors
