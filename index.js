@@ -113,7 +113,7 @@ export default function config(options = {}, ...userConfigs) {
         ignoreInlineComments: true,
         ignorePattern: [
           /pragma|ignore|biome-ignore|tslint:/v,
-          /const |let |import |export |function |class |if \(|for \(|while \(|switch \(|console\.log\(/v
+          /const |let |import |export |function |class |if \(|for \(|while \(|switch \(|console\.log\(|log\(|logDebug\(/v
         ].map(r => r.source).join('|')
       }],
       'curly': 'warn',
