@@ -161,7 +161,10 @@ export default function config(options = {}, ...userConfigs) {
       'prefer-object-has-own': 'warn',
       'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }],
       'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
-      'unicorn/filename-case': ['warn', { cases: { kebabCase: true, pascalCase: true, snakeCase: true } }],
+      'unicorn/filename-case': ['warn', {
+        cases: { camelCase: true, kebabCase: true, pascalCase: true, snakeCase: true },
+        ignore: ['README.md', 'CONTRIBUTING.md', 'CHANGELOG.md']
+      }],
       'unicorn/no-array-reduce': 0,
       'unicorn/no-array-reverse': 0, // Little benefit, find it cumbersome to deal with
       'unicorn/no-array-sort': 0,
