@@ -186,7 +186,7 @@ export default function config(options = {}, ...userConfigs) {
     rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
   }, {
     files: [GLOB_SRC],
-    ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
+    ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}', '**/eslint.config.*'],
     rules: { 'jsdoc/require-file-overview': 1 }
   }, {
     // Lint @example tags
