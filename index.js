@@ -62,7 +62,6 @@ export default function config(options = {}, ...userConfigs) {
         'ts/use-unknown-in-catch-callback-variable': 0,
         // Additional rules
         'ts/consistent-type-exports': 'warn',
-        'ts/explicit-function-return-type': ['warn', { allowExpressions: true }],
         'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
         'ts/explicit-module-boundary-types': 'warn',
         'ts/no-dynamic-delete': 0,
