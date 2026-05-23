@@ -182,7 +182,7 @@ export default function config(options = {}, ...userConfigs) {
   }, {
     files: [`src/${GLOB_SRC}`],
     ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}'],
-    rules: { 'jsdoc/require-jsdoc': ['warn', { require: { FunctionDeclaration: true, MethodDefinition: true } }] }
+    rules: { 'jsdoc/require-jsdoc': ['warn', { publicOnly: true, require: { FunctionDeclaration: true, MethodDefinition: true } }] }
   }, {
     files: [GLOB_SRC],
     ignores: [GLOB_MARKDOWN_CODE, '**/*.{d,as,test}.{js,ts}', '**/eslint.config.*'],
