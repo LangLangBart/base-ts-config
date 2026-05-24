@@ -111,8 +111,17 @@ export default function config(options = {}, ...userConfigs) {
         ignoreConsecutiveComments: true,
         ignoreInlineComments: true,
         ignorePattern: [
+          // Tooling related
           /pragma|ignore|biome-ignore|tslint:/v,
-          /const |let |import |export |function |class |if \(|for \(|while \(|switch \(|console\.log\(|log\(|logDebug\(/v
+          // Declarations
+          /const |let |using |var |function |class |import |export/v,
+          // Statements
+          /break |case |continue |debugger |default |return |throw |yield /v,
+          /do \{|if \(|for \(|switch \(|while \(/v,
+          // Operators
+          /await |delete |new |typeof |void/v,
+          // Rest
+          /console\.log\(|log\(|logDebug\(|process\.|this\.|require\(|fetch\(/v
         ].map(r => r.source).join('|')
       }],
       'curly': 'warn',
