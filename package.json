@@ -6,6 +6,7 @@
   "types": "index.d.ts",
   "scripts": {
     "lint:fix": "eslint --cache --fix --max-warnings 0",
+    "prepare": "if type pre-commit >/dev/null; then pre-commit install; fi",
     "type:check": "tsc --skipLibCheck"
   },
   "dependencies": {
