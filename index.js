@@ -114,14 +114,14 @@ export default function config(options = {}, ...userConfigs) {
           // Tooling related
           /pragma|ignore|biome-ignore|tslint:/v,
           // Declarations
-          /const |let |using |var |function |class |import |export/v,
+          /const |let |using |var |function |class |import |export /v,
           // Statements
           /break |case |continue |debugger |default |return |throw |yield /v,
           /do \{|if \(|for \(|switch \(|while \(/v,
           // Operators
-          /await |delete |new |typeof |void/v,
+          /await |delete |new |typeof |void /v,
           // Rest
-          /console\.log\(|log\(|logDebug\(|process\.|this\.|require\(|fetch\(/v
+          /console\.log\(|log\(|logDebug\(|process\.|this\.|require\(|fetch\(|spawn(?:Sync)?\(/v
         ].map(r => r.source).join('|')
       }],
       'curly': 'warn',
