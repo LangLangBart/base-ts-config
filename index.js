@@ -115,13 +115,17 @@ export default function config(options = {}, ...userConfigs) {
           /pragma|ignore|biome-ignore|tslint:/v,
           // Declarations
           /const |let |using |var |function |class |import |export /v,
+          // Standalone statements
+          /\b(?:break|continue|debugger|default|return)\b/v,
           // Statements
-          /break |case |continue |debugger |default |return |throw |yield /v,
-          /do \{|if \(|for \(|switch \(|while \(/v,
+          /case |throw |yield /v,
+          /do \{|if \(|for \(|switch \(|try \{|catch \(|while \(/v,
           // Operators
           /await |delete |new |typeof |void /v,
+          // Function calls at start of line
+          /[\w$.]+\(/v,
           // Rest
-          /console\.log\(|log\(|logDebug\(|process\.|this\.|require\(|fetch\(|spawn(?:Sync)?\(/v
+          /process\.|this\./v
         ].map(r => r.source).join('|')
       }],
       'curly': 'warn',
