@@ -50,6 +50,7 @@ export default function config(options = {}, ...userConfigs) {
         // Adjusted recommended rules
         'ts/dot-notation': ['warn', { allowPrivateClassPropertyAccess: true, allowProtectedClassPropertyAccess: true }],
         'ts/no-confusing-void-expression': 0,
+        'ts/no-dynamic-delete': 0,
         'ts/no-empty-function': 0,
         'ts/no-explicit-any': 0,
         'ts/no-misused-spread': 0, // Should be enabled https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2521
@@ -64,7 +65,6 @@ export default function config(options = {}, ...userConfigs) {
         'ts/consistent-type-exports': 'warn',
         'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
         'ts/explicit-module-boundary-types': 'warn',
-        'ts/no-dynamic-delete': 0,
         'ts/no-useless-empty-export': 'warn',
         'ts/prefer-readonly': 'warn',
         'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
@@ -183,7 +183,8 @@ export default function config(options = {}, ...userConfigs) {
       'unicorn/no-new-array': 0, // See: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2406
       'unicorn/no-null': 0,
       'unicorn/no-process-exit': 0,
-      'unicorn/prevent-abbreviations': ['warn', { checkFilenames: false }]
+      'unicorn/prevent-abbreviations': ['warn', { checkFilenames: false }],
+      'unicorn/switch-case-braces': ['warn', 'avoid']
     }
   }, {
     // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
