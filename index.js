@@ -64,7 +64,7 @@ export default function config(options = {}, ...userConfigs) {
         // Additional rules
         'ts/consistent-type-exports': 'warn',
         'ts/explicit-member-accessibility': ['warn', { accessibility: 'no-public' }],
-        'ts/explicit-module-boundary-types': 'warn',
+        'ts/explicit-module-boundary-types': ['warn', { allowOverloadFunctions: true }],
         'ts/no-useless-empty-export': 'warn',
         'ts/prefer-readonly': 'warn',
         'ts/strict-boolean-expressions': ['warn', { // Catch values that are always truthy or always falsy
