@@ -10,7 +10,6 @@ import parser from '@typescript-eslint/parser'
 import jsdoc from 'eslint-plugin-jsdoc'
 import { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc/getJsdocProcessorPlugin.js'
 import perfectionist from 'eslint-plugin-perfectionist'
-import unicorn from 'eslint-plugin-unicorn'
 
 /**
  * @param {object} options     Configuration options passed to antfu
@@ -79,6 +78,35 @@ export default function config(options = {}, ...userConfigs) {
         }]
       },
       tsconfigPath: 'tsconfig.json'
+    },
+    // ESLint 10.2+ (eslint/#20571) crashes when a configured rule doesn't
+    // support the file's language. Unicorn rules (eslint-plugin-unicorn/#3257)
+    // only support JS, so they crash on JSON/YAML files. The ESLint team is
+    // aware (eslint/#20999) but no fix yet. antfu scopes unicorn to JS/TS files
+    // automatically. Configure unicorn here, don't spread them manually.
+    unicorn: {
+      allRecommended: true,
+      overrides: {
+        'unicorn/consistent-class-member-order': 0, // 'perfectionist/sort-classes' has autofix
+        'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
+        'unicorn/filename-case': 0, // Too restrictive
+        'unicorn/max-nested-calls': 0,
+        'unicorn/name-replacements': 0, // Painful to comply with
+        'unicorn/no-array-reduce': 0,
+        'unicorn/no-array-reverse': 0, // Little benefit, find it cumbersome to deal with
+        'unicorn/no-array-sort': 0,
+        'unicorn/no-break-in-nested-loop': 0,
+        'unicorn/no-new-array': 0, // See: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2406
+        'unicorn/no-null': 0,
+        'unicorn/no-process-exit': 0,
+        'unicorn/no-this-outside-of-class': 0,
+        'unicorn/no-top-level-assignment-in-function': 0,
+        'unicorn/no-unreadable-for-of-expression': 0, // Too restrictive
+        'unicorn/no-unsafe-property-key': 0, // Redundant with TypeScript
+        'unicorn/prefer-await': 0,
+        'unicorn/require-array-sort-compare': 0, // Apply when needed
+        'unicorn/switch-case-braces': ['warn', 'avoid']
+      }
     }
   }
 
@@ -95,7 +123,6 @@ export default function config(options = {}, ...userConfigs) {
       ...jsdoc.configs['flat/requirements-typescript'].rules,
       ...jsdoc.configs['flat/stylistic-typescript'].rules,
       ...perfectionist.configs['recommended-natural'].rules,
-      ...unicorn.configs.recommended.rules,
 
       // Complexity rules off for now but desireful to have
       // 'complexity': 'warn',
@@ -140,6 +167,11 @@ export default function config(options = {}, ...userConfigs) {
       'jsdoc/require-hyphen-before-param-description': ['warn', 'never', { tags: { '*': 'never' } }],
       'jsdoc/require-jsdoc': 0, // Making JSDoc optional
       'jsdoc/require-param': ['warn', { checkDestructured: false }],
+      // Disable types; unexpectedly included in the jsdoc requirements config:
+      // https://github.com/gajus/eslint-plugin-jsdoc/issues/1709
+      'jsdoc/require-next-type': 0,
+      'jsdoc/require-throws-type': 0,
+      'jsdoc/require-yields-type': 0,
       'logical-assignment-operators': ['warn', 'always', { enforceForIfStatements: true }],
       'no-console': 0,
       'no-else-return': ['warn', { allowElseIf: false }],
@@ -155,8 +187,9 @@ export default function config(options = {}, ...userConfigs) {
       'operator-assignment': ['warn', 'always'],
       'perfectionist/sort-classes': ['warn', { // Relocate 'static-method' before 'static-block' without hardcoding group members
         groups: perfectionist.rules['sort-classes'].defaultOptions[0].groups
-          .filter(group => !(Array.isArray(group) && group.includes('static-method')))
-          .flatMap(group => group === 'static-block' ? [['static-method', 'static-function-property'], group] : [group]),
+          .flatMap(group => Array.isArray(group) && group.includes('static-method') ?
+              [] :
+              (group === 'static-block' ? [['static-method', 'static-function-property'], group] : [group])),
         order: 'asc',
         type: 'natural'
       }],
@@ -171,20 +204,7 @@ export default function config(options = {}, ...userConfigs) {
         type: 'natural'
       }],
       'prefer-object-has-own': 'warn',
-      'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }],
-      'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
-      'unicorn/filename-case': ['warn', {
-        cases: { camelCase: true, kebabCase: true, pascalCase: true, snakeCase: true },
-        ignore: ['README.md', 'CONTRIBUTING.md', 'CHANGELOG.md']
-      }],
-      'unicorn/no-array-reduce': 0,
-      'unicorn/no-array-reverse': 0, // Little benefit, find it cumbersome to deal with
-      'unicorn/no-array-sort': 0,
-      'unicorn/no-new-array': 0, // See: https://github.com/sindresorhus/eslint-plugin-unicorn/issues/2406
-      'unicorn/no-null': 0,
-      'unicorn/no-process-exit': 0,
-      'unicorn/prevent-abbreviations': ['warn', { checkFilenames: false }],
-      'unicorn/switch-case-braces': ['warn', 'avoid']
+      'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }]
     }
   }, {
     // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
@@ -220,8 +240,7 @@ export default function config(options = {}, ...userConfigs) {
 function deepMerge(target, override) {
   const isObject = v => v !== null && typeof v === 'object' && !Array.isArray(v)
   const result = { ...target }
-  for (const key of Object.keys(override)) {
-    const value = override[key]
+  for (const [key, value] of Object.entries(override)) {
     if (value === undefined) {
       continue
     }
