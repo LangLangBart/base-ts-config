@@ -104,6 +104,7 @@ export default function config(options = {}, ...userConfigs) {
         'unicorn/no-unreadable-for-of-expression': 0, // Too restrictive
         'unicorn/no-unsafe-property-key': 0, // Redundant with TypeScript
         'unicorn/prefer-await': 0,
+        'unicorn/prefer-top-level-await': 0,
         'unicorn/require-array-sort-compare': 0, // Apply when needed
         'unicorn/switch-case-braces': ['warn', 'avoid']
       }
