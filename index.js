@@ -208,9 +208,9 @@ export default function config(options = {}, ...userConfigs) {
       'regexp/no-unused-capturing-group': ['warn', { allowNamed: true, fixable: false }]
     }
   }, {
-    // TypeScript's own compiler handles those cases; see https://typescript-eslint.io/troubleshooting/faqs/eslint
+    // Disable eslint:recommended rules handled by TypeScript's compiler
     files: [GLOB_TS, GLOB_MARKDOWN_CODE],
-    rules: { 'no-redeclare': 0, 'no-undef': 0 }
+    rules: tseslint.configs['flat/eslint-recommended'].rules
   }, {
     files: [GLOB_JS],
     rules: { 'jsdoc/no-types': 0, 'jsdoc/require-param-type': 1 }
