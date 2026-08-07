@@ -106,6 +106,7 @@ export default function config(options = {}, ...userConfigs) {
         'unicorn/prefer-await': 0,
         'unicorn/prefer-top-level-await': 0,
         'unicorn/require-array-sort-compare': 0, // Apply when needed
+        'unicorn/single-line-block-comment-style': 0, // JSDoc plugin
         'unicorn/switch-case-braces': ['warn', 'avoid']
       }
     }
