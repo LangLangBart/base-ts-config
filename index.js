@@ -177,7 +177,6 @@ export default function config(options = {}, ...userConfigs) {
       'logical-assignment-operators': ['warn', 'always', { enforceForIfStatements: true }],
       'no-console': 0,
       'no-else-return': ['warn', { allowElseIf: false }],
-      'no-lone-blocks': 'warn',
       'no-lonely-if': 'warn',
       'no-multi-assign': 'warn',
       'no-shadow': 'warn',
