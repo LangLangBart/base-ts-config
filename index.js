@@ -20,6 +20,8 @@ export default function config(options = {}, ...userConfigs) {
   // Enables type information to link rule names to their documentation on hover
   /** @type {Parameters<typeof import('@antfu/eslint-config').default>[0]} */
   const defaults = {
+    // Complexity rule off for now but desireful to have
+    antislop: { overrides: { 'sonarjs/cognitive-complexity': 0 } },
     formatters: true,
     isInEditor: false, // Keeps prefer-const auto-fixable on save (let → const)
     stylistic: {
@@ -125,13 +127,6 @@ export default function config(options = {}, ...userConfigs) {
       ...jsdoc.configs['flat/requirements-typescript'].rules,
       ...jsdoc.configs['flat/stylistic-typescript'].rules,
       ...perfectionist.configs['recommended-natural'].rules,
-
-      // Complexity rules off for now but desireful to have
-      // 'complexity': 'warn',
-      // 'max-depth': ['warn', { max: 5 }],
-      // 'max-lines': ['warn', { max: 1500, skipComments: true }],
-      // 'max-nested-callbacks': ['warn', 5],
-      // 'max-params': ['warn', { max: 5 }],
 
       // Disable/relax some rules to make it easier to write code
       'antfu/no-top-level-await': 0,
