@@ -20,8 +20,7 @@ export default function config(options = {}, ...userConfigs) {
   // Enables type information to link rule names to their documentation on hover
   /** @type {Parameters<typeof import('@antfu/eslint-config').default>[0]} */
   const defaults = {
-    // Complexity rule off for now but desireful to have
-    antislop: { overrides: { 'sonarjs/cognitive-complexity': 0 } },
+    antislop: { slop: true, sonarjs: false },
     formatters: true,
     isInEditor: false, // Keeps prefer-const auto-fixable on save (let → const)
     stylistic: {
